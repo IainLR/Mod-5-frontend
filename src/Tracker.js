@@ -67,6 +67,7 @@ export default class Tracker extends React.Component {
                 this.fetchFood()
             }else{
                 console.log('make a new meal! handleStartTrack()')
+                this.handleStartTrack(saveDate)
             }
             
             
