@@ -1,0 +1,25 @@
+* {
+    margin: 0;
+    padding: 0;
+
+}
+.container {
+    display: flex;  
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.meal {
+    background-color: coral;
+    padding: 40px;
+    margin: 30px;
+    color: white
+    
+}
+
+ /* display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    padding: 10px; */
