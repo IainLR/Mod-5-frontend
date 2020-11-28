@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { Button, Checkbox, Form, Segment } from 'semantic-ui-react'
+import { Button, Checkbox, Form, Segment, Header } from 'semantic-ui-react'
+import { Link } from "react-router-dom";
 import './Form.css';
 
 
@@ -38,23 +39,48 @@ export default class SignUp extends Component {
       body: JSON.stringify(userObj)
     })
       .then(r => r.json())
-      .then(console.log)
-      this.props.history.push('/tracker')
+      .then(data => {
+        console.log(data)
+        this.handleLogin(e)
+      })
+    //   this.props.history.push('/BMR')
       }
+
+      handleLogin = (e) => {
+        e.preventDefault()
+        if (this.state.name && this.state.password){
+        fetch('http://localhost:3000/api/v1/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                name: this.state.name,
+                password: this.state.password
+            })
+        })
+        .then(res => res.json())
+        .then(userInfo => {
+            localStorage.setItem('token', userInfo.token)
+            // localStorage.token = userInfo.token
+            if(localStorage.token === "undefined"){
+                localStorage.clear()
+                this.props.history.push('/login')
+                console.log("no sign in")
+            }
+            this.props.history.push('/BMR')
+        })
+         }else{
+             return null
+         }
+        
+    }
     
     render() {
         return (
             <div className = 'Form_container'>
-                {/* <form onSubmit={(e) => this.handleSignUp(e, this.state)}>
-                    <label> Username </label>
-                    <input onChange={(e) => this.handleChange(e)} name='name' type='text'/>
-                    <label> Email </label>
-                    <input onChange={(e) => this.handleChange(e)} name='email' type='text'/>
-                    <label> Password </label>
-                    <input onChange={(e) => this.handleChange(e)} name='password' type='password'/>
-                    <input type='submit'/>
-                </form> */}
                 <Segment style={{width: '400px'}}>
+                <Header as='h2'>Sign up</Header>
             <Form>
             <Form.Field>
             <label>Username</label>
@@ -71,6 +97,7 @@ export default class SignUp extends Component {
        
             <Button type='submit' onClick={(e) => this.handleSignUp(e, this.state)} color='green'>Sign up</Button>
       </Form>
+      <Link to = '/login' textAlign= 'center'>Have an Account?</Link>
                 </Segment>
                 
             </div>

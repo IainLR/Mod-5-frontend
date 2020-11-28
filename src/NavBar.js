@@ -1,17 +1,21 @@
 import React, { Component } from 'react'
 import { Menu, Segment } from 'semantic-ui-react'
+import {  } from 'react-router-dom';
 
 export class NavBar extends Component {
+
 
     state = { activeItem: 'Tracker' }
 
     handleItemClick = (e, { name }) => {
         this.setState({ activeItem: name })
-        // if (name === 'Log out'){
-        //     localStorage.clear()
-        //     this.props.history.push("/login")
-        //     console.log('log out')
-        // }
+       
+        if (name === 'Log out'){
+            console.log('I would like to log out')
+            localStorage.clear()
+            // this.props.history.push('/login')
+            console.log('log out')
+        }
 
         this.getProfile()
     }

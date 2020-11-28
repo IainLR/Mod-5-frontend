@@ -3,6 +3,7 @@ import './Tracker.css'
 import { Progress } from 'semantic-ui-react'
 import { Button, Card, Icon, Segment, Header } from 'semantic-ui-react'
 import SearchBar from './SearchBar'
+import NavBar from './NavBar'
 
 export default class Tracker extends React.Component {
     state = {
@@ -25,7 +26,7 @@ export default class Tracker extends React.Component {
         search: '',
         searchResults: {},
         chosenFood: {},
-        calorieBudget: 1950,
+        calorieBudget: 0,
         caloriesConsumed: 0
     }
 
@@ -51,10 +52,11 @@ export default class Tracker extends React.Component {
         })
         .then(res => res.json())
         .then(data => {
+            let calorieBudget = data.user.goal ? data.user.goal.daily_calories : 1950
             this.setState({
                 userId: data.user.id,
-                userData: data
-               
+                userData: data,
+                calorieBudget
             })
             let dateArr = data.user.meals.map(meal => meal.date)
             console.log(dateArr)
@@ -355,23 +357,87 @@ export default class Tracker extends React.Component {
             console.log("SUCCESS?!", data)
         })
     }
+
+    handleBackButton = (e) => {
+        console.log(this.state.date, e.target.name)
+        let dateStringArr = this.state.date.split(' ')
+        let dayInt = parseInt(dateStringArr[1])
+        console.log(dateStringArr, dayInt)
+        console.log(this.state.userData)
+       
+        if(e.target.name === 'back'){
+           let date = String(dateStringArr[0] + ' ' + (dayInt - 1))
+           console.log(date)
+           this.setState({ date })
+           this.profileFetch()
+        } else{
+            let date = String(dateStringArr[0] + ' ' + (dayInt + 1))
+           console.log(date)
+           this.setState({ date })
+           this.profileFetch()
+        }
+        
+    }
+
+    profileFetch = () => {
+        fetch('http://localhost:3000/api/v1/profile', {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${localStorage.token}` 
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            this.setState({
+                userId: data.user.id,
+                userData: data
+               
+            })
+            let dateArr = data.user.meals.map(meal => meal.date)
+            console.log(dateArr)
+            if(dateArr.includes(this.state.date)){
+                let mealObj = data.user.meals.find(obj => obj.date === this.state.date)
+                // console.log(mealObj, "is this the meal?")
+                this.setState({
+                    mealId: mealObj.id
+                })
+                this.fetchFood()
+            }else{
+                console.log('make a new meal! handleStartTrack()')
+                this.setState({
+                    breakfast: [],
+                    lunch: [],
+                    dinner: [],
+                    snacks: [],
+                    caloriesConsumed: 0
+                })
+                this.handleStartTrack(this.state.date)
+            }
+            
+            
+        })
+    }
     
 
     render(){
-        let today = new Date(new Date().getFullYear(),new Date().getMonth() , new Date().getDate())
-        let date = String(today).split(' ')
-        let displayDate = date[0] + ' ' + date[1] + ' ' + (parseInt(date[2]) - this.state.pageModifier)
-        let saveDate = date[1] + ' ' + parseInt(date[2])
+        
+        let displayDate = this.state.date
         return (
         
     <div>
         <Segment>
+        
+        <Button onClick={(e) => this.handleBackButton(e)}
+        content='Next' icon='right arrow' labelPosition='right' floated='right' name ='next' />
+        <Button onClick={(e) => this.handleBackButton(e)}
+        content='back' icon='left arrow' labelPosition='left' floated='left' name ='back'/>
             <div className= 'container'>
             <Header as='h2'>{displayDate}</Header>
             </div>
         </Segment>
         <Segment>
-                 <Progress percent={(this.state.caloriesConsumed / this.state.calorieBudget) * 100} success>
+                 <Progress percent={(this.state.caloriesConsumed / this.state.calorieBudget) * 100} 
+                 success={this.state.caloriesConsumed < this.state.calorieBudget ? true : false}>
         {this.state.caloriesConsumed}/{this.state.calorieBudget} Calories
                 </Progress>
         </Segment>
@@ -401,7 +467,9 @@ export default class Tracker extends React.Component {
           {this.state.breakfast.length > 0 ? 
           this.state.breakfast.map(foodObj => {
             //   console.log(foodObj.foods[0].food_name)
-         return  <li onClick = {() => this.deleteFood(foodObj)}> {foodObj.name} {foodObj.calories} </li>
+         return  <Segment onClick = {() => this.deleteFood(foodObj)}
+         secondary> {foodObj.name} {foodObj.calories} </Segment>
+        //  <li onClick = {() => this.deleteFood(foodObj)}> {foodObj.name} {foodObj.calories} </li>
           })
         : null}
         </Card.Description>
