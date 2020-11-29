@@ -1,6 +1,6 @@
 import React from 'react'
 // import 'semantic-ui-css/semantic.min.css'
-import { BrowserRouter, Route, Switch, Link } from "react-router-dom";
+import { BrowserRouter, Route, Switch, Link, Redirect } from "react-router-dom";
 // import './App.css';
 import Tracker from './Tracker'
 import SearchBar from './SearchBar'
@@ -125,6 +125,8 @@ class App extends React.Component {
         {/* <Route path = '/BMR'     */}
         <Route path ="/login"  component={Login} />
         <Route path='/tracker' component={Tracker} />
+        <Route path='/BMR' component={BMR} />
+        <Route render={() => <Redirect to={{pathname: "/tracker"}} />} />
       {/* <Tracker/> */}
       </Switch>
     </div>
