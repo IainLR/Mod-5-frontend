@@ -310,6 +310,41 @@ export default class Tracker extends React.Component {
         })
     }
 
+    handleCommonFoodClick = (food) => {
+        console.log('click', food)
+        // fetch(`https://trackapi.nutritionix.com/v2/search/item?nix_item_id=${food.nix_item_id}`, {
+        // method: 'GET',
+        // headers: { 
+        //     "x-app-id": 'ba42eace',
+        //     "x-app-key": '1fbb199b1ef5a9e9f6feda6425f063f9',
+        // }
+        // })
+        // .then(res=>res.json())
+        // .then(chosenFood => {
+        //     console.log( "Brand nutrients:", chosenFood)
+        //     this.setState({chosenFood})
+        //     this.storeFood(chosenFood)
+            
+        // })
+          fetch('https://trackapi.nutritionix.com/v2/natural/nutrients', {
+            method: 'POST',
+             headers: { 
+               'Content-Type': 'application/json',
+               "x-app-id": 'ba42eace',
+               "x-app-key": '1fbb199b1ef5a9e9f6feda6425f063f9',
+             },
+             body: JSON.stringify({
+               "query": food.food_name
+             })
+           })
+           .then(res=>res.json())
+           .then(chosenFood => {
+               console.log("nutrients?", chosenFood)
+                this.setState({chosenFood})
+                this.storeFood(chosenFood)
+            })
+    }
+
     handleStartTrack = (date) => {
         console.log('click start', date)
 
@@ -498,7 +533,8 @@ export default class Tracker extends React.Component {
         {this.state.lunch.length > 0 ? 
           this.state.lunch.map(foodObj => {
             //   console.log(foodObj.foods[0].food_name)
-         return  <li onClick = {() => this.deleteFood(foodObj)}> {foodObj.name} {foodObj.calories} </li>
+         return  <Segment  secondary 
+         onClick = {() => this.deleteFood(foodObj)}> {foodObj.name} {foodObj.calories} </Segment>
           })
         : null}
         </Card.Description>
@@ -527,7 +563,8 @@ export default class Tracker extends React.Component {
         {this.state.dinner.length > 0 ? 
           this.state.dinner.map(foodObj => {
             //   console.log(foodObj.foods[0].food_name)
-         return  <li onClick = {() => this.deleteFood(foodObj)}> {foodObj.name} {foodObj.calories} </li>
+         return  <Segment secondary 
+         onClick = {() => this.deleteFood(foodObj)}> {foodObj.name} {foodObj.calories} </Segment>
           })
         : null}
         </Card.Description>
@@ -556,7 +593,8 @@ export default class Tracker extends React.Component {
         {this.state.snacks.length > 0 ? 
           this.state.snacks.map(foodObj => {
             //   console.log(foodObj.foods[0].food_name)
-         return  <li onClick = {() => this.deleteFood(foodObj)}> {foodObj.name} {foodObj.calories} </li>
+         return  <li style ={{textDecoration: 'underline'}}
+         onClick = {() => this.deleteFood(foodObj)}> {foodObj.name} {foodObj.calories} </li>
           })
         : null}
         </Card.Description>
@@ -588,6 +626,7 @@ export default class Tracker extends React.Component {
                     handleSearchClick = {this.handleSearchClick} 
                     searchResults = {this.state.searchResults}
                     handleBrandFoodClick= {this.handleBrandFoodClick}
+                    handleCommonFoodClick= {this.handleCommonFoodClick}
                     />
                 </div>
             </Segment>
