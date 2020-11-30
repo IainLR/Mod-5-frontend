@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Button, Checkbox, Form, Segment, Header } from 'semantic-ui-react'
+import { Button, Form, Segment, Header } from 'semantic-ui-react'
 import { Link } from "react-router-dom";
 import './Form.css';
 
@@ -35,7 +35,8 @@ export default class Login extends Component {
             if(localStorage.token === "undefined"){
                 localStorage.clear()
                 this.props.history.push('/login')
-                console.log("no sign in")
+                console.log("no sign in", userInfo.error)
+                alert(userInfo.error)
             }
             this.props.history.push('/tracker')
         })
@@ -49,15 +50,6 @@ export default class Login extends Component {
         return (
             <div className = 'Form_container'>
                 {localStorage.token ? this.props.history.push('/tracker') : null}
-                 {/* <form onSubmit={(e) => this.handleSubmit(e)}>
-                     LOGIN
-                    <label> Name </label>
-                    <input onChange={(e) => this.handleChange(e)} name='name' type='text'/>
-                    
-                    <label> Password </label>
-                    <input onChange={(e) => this.handleChange(e)} name='password' type='password'/>
-                    <input type='submit'/>
-                </form> */}
             <Segment  className = 'Form' style={{width: '400px'}}> 
             <Header as='h2'>Login</Header>
             <Form>
