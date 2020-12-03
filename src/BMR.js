@@ -12,6 +12,9 @@ export class BMR extends Component {
 
     state = {
         userId: 0,
+        user: {},
+        edit: false,
+        goalID: 0,
         feet: 0,
         inches: 0,
         weight: 0,
@@ -32,8 +35,10 @@ export class BMR extends Component {
         })
         .then(res => res.json())
         .then(data => {
+            console.log(data.user)
             this.setState({
                 userId: data.user.id,
+                user: data.user
             })
         })
         }
@@ -75,7 +80,7 @@ export class BMR extends Component {
     saveGoal = () => {
         if(this.state.calories === 0 ){
             alert('Please calculate your BMR')
-        }else{
+        }else if (this.state.user.goal === null) {
             fetch('http://localhost:3000/api/v1/goals', {
                 method: 'POST',
                 headers: {
@@ -95,6 +100,8 @@ export class BMR extends Component {
             .then(res => res.json())
             .then(console.log)
             this.props.history.push('/tracker')
+        }else{
+
         }
         console.log('click, let us make a goal')
     }
@@ -102,7 +109,7 @@ export class BMR extends Component {
     render() {
         return (
             <div>
-            <div className = 'Form_container'>
+            <div className = 'BMR'>
             <Segment style={{width: '400px'}}>
             <Header as='h2'>BMR calculator</Header>
             <Form>
@@ -160,15 +167,13 @@ export class BMR extends Component {
         >Calculate</Form.Button>
       </Form>
                 </Segment>
-                
-    
             </div>
-            <div className = 'Form_container'>
-         <Segment className = 'Form_container' style={{width: '400px'}}>
+            <div className = 'BMR'>
+         <Segment className = 'BMR' style={{width: '400px'}}>
             <Header as='h3'> BMR: {Math.round(this.state.calories)} calories</Header>
         </Segment>
          </div>
-         <div className = 'Form_container'>
+         <div className = 'BMR'>
          <Button color='green' active = {false} 
          onClick ={this.saveGoal}
          >Save</Button>

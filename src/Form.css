@@ -1,4 +1,18 @@
+body {
+    background-image: url('images/landingPageBoard.jpeg') ; ;
+    background-size: 100% 110% ;
+    /* background-size: cover ; */
+}
+
+
+
 .Form_container{
+    display: flex;
+    justify-content: space-around;
+    padding: 150px;
+}
+
+.BMR {
     display: flex;
     justify-content: space-around;
     padding: 30px;
