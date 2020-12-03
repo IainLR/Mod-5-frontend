@@ -48,6 +48,7 @@ export default class Login extends Component {
 
     render() {
         return (
+            <div className = 'Form'> 
             <div className = 'Form_container'>
                 {localStorage.token ? this.props.history.push('/tracker') : null}
             <Segment  className = 'Form' style={{width: '400px'}}> 
@@ -66,6 +67,7 @@ export default class Login extends Component {
             <Link to = '/signup' textAlign= 'center'>New User?</Link>
             </Segment>
             
+            </div>
             </div>
         )
     }

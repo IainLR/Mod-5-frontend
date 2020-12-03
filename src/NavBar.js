@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Menu, Segment } from 'semantic-ui-react'
-import {  } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 export class NavBar extends Component {
 
@@ -13,11 +13,18 @@ export class NavBar extends Component {
         if (name === 'Log out'){
             console.log('I would like to log out')
             localStorage.clear()
-            // this.props.history.push('/login')
-            console.log('log out')
+            // this.props.history.push('/tracker')
+            // this.props.history.push('/tracker')
         }
 
         this.getProfile()
+    }
+
+    handleLogoutClick = () => {
+        console.log('click')
+        localStorage.clear()
+        // this.props.history.push('/tracker')
+        // document.location.reload()
     }
 
     getProfile = () => {
@@ -39,22 +46,27 @@ export class NavBar extends Component {
                
         <Segment color= 'orange' inverted>
         <Menu color = 'orange' inverted secondary>
+        <Link to = '/tracker' textAlign= 'center'>
           <Menu.Item
             name='Tracker'
             active={activeItem === 'Tracker'}
             onClick={this.handleItemClick}
           />
+        </Link>
+          <Link to = '/BMR' textAlign= 'center'>
           <Menu.Item
-            name='Profile'
-            active={activeItem === 'Profile'}
+            name='BMR'
+            active={activeItem === 'BMR'}
             onClick={this.handleItemClick}
           />
+          </Link>
+          <Link to = '/login' textAlign= 'center'>
           <Menu.Item
             name='Log out'
             active={activeItem === 'Log out'}
-            onClick={this.handleItemClick}
+            onClick={this.handleLogoutClick}
           />
-          
+          </Link>
         </Menu>
       </Segment>
             </div>
